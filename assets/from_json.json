@@ -1,0 +1,32 @@
+{
+  "teacher_name":"Sabbir",
+  "age":30,
+  "student":[
+    {
+      "id":1,
+      "name":"Khan"
+    },
+    {
+      "id":2,
+      "name":"Khanna"
+    },
+    {
+      "id":3,
+      "name":"Khatun"
+    }
+  ],
+  "equipment":[
+    {
+      "id":1,
+      "name":"Chalk"
+    },
+    {
+      "id":2,
+      "name":"Board"
+    },
+    {
+      "id":3,
+      "name":"Daster"
+    }
+  ]
+}
