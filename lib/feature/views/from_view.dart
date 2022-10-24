@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:testkj/feature/models/student_from_request.dart';
@@ -5,7 +7,9 @@ import 'package:testkj/feature/models/student_from_request.dart';
 import '../view_models/view_models.dart';
 
 class FromView extends StatelessWidget {
-  FromView({Key? key}) : super(key: key) {
+  FromView({
+    Key? key,
+  }) : super(key: key) {
     controller = Get.put(ViewModels());
   }
 
@@ -198,7 +202,48 @@ class FromView extends StatelessWidget {
                             'Submit',
                             style: TextStyle(color: Colors.white),
                           )),
-                    )
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Center(
+                      child: GestureDetector(
+                        onLongPress: () {
+                          controller.buttonFontColor.value = Colors.red;
+                          // Timer(const Duration(seconds: 1), () {
+                          //   controller.buttonFontColor.value = Colors.amber;
+                          // });
+                          Timer(const Duration(seconds: 2), () {
+                            controller.buttonFontColor.value = Colors.orange;
+                            controller.isSuccess.value = true;
+                          });
+                        },
+                        child: Container(
+                          height: 100,
+                          width: 100,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: controller.buttonFontColor.value,
+                                  width: 5),
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.circular(100)),
+                          child: Center(
+                            child: controller.isSuccess.value
+                                ? const Icon(
+                                    Icons.check,
+                                    color: Colors.white,
+                                    size: 30,
+                                  )
+                                : const Text(
+                                    "2.45",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

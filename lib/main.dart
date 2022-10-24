@@ -1,16 +1,44 @@
 import 'dart:io';
 import 'dart:math' as math;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart' as p;
 import 'package:dio/dio.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:testkj/feature/repositories/repository.dart';
 
-import 'feature/views/from_view.dart';
+import 'download_file/view/from_download_screen.dart';
+import 'feature/view_models/view_models.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  try {
+    FlutterLocalNotificationsPlugin flutterNotificationPlugin =
+        FlutterLocalNotificationsPlugin();
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'channel ID',
+      'channel name',
+      playSound: true,
+      importance: Importance.max,
+    );
+    await flutterNotificationPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+    var initializationSettingsAndroid =
+        const AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsIOS = const DarwinInitializationSettings();
+    var initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+    await flutterNotificationPlugin.initialize(initializationSettings,
+        onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+        onDidReceiveNotificationResponse: notificationTapBackground);
+  } catch (e) {
+    debugPrint(e.toString());
+  }
   Get.lazyPut(() => StudentRepository(), fenix: true);
   runApp(const MyApp());
 }
@@ -25,9 +53,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: FromView(),
+      home: const DownloadPage(title: 'Download'),
     );
   }
+}
+
+Future<void> notificationTapBackground(
+    NotificationResponse notificationResponse) async {
+  final ViewModels downloadingDialog = Get.find();
+  OpenFile.open(downloadingDialog.path.value);
 }
 
 class PdfViewer extends StatefulWidget {

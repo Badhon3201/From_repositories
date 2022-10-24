@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:testkj/feature/models/from_response.dart';
 import 'package:testkj/feature/repositories/repository.dart';
+import 'package:path_provider/path_provider.dart' as p;
 
 import '../models/student_from_request.dart';
 
 class ViewModels extends GetxController {
+  var buttonFontColor = Colors.orange.obs;
   final StudentRepository _repository = Get.find();
   final allData = Rxn<StudentFromResponse>();
 
@@ -20,7 +23,17 @@ class ViewModels extends GetxController {
   final checkYesList = <bool>[].obs;
   final checkNoList = <bool>[].obs;
   final checkStudentList = <int, EqSnt>{}.obs;
+
+  var isSuccess = false.obs;
+
+  var path = "".obs;
   // final checkStudentList = <EqSnt>[].obs;
+
+  Future<String> getFilePath(String filename) async {
+    final dir = await p.getExternalStorageDirectory();
+    print(dir);
+    return "${dir!.path}/$filename";
+  }
 
   getData() async {
     final response = await _repository.getData();
